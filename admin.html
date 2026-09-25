@@ -808,13 +808,20 @@ async function ensureDefaultCategories(){
 
     try{
 
-        const snapshot = await db.collection("categories").limit(1).get();
+        const existing = await db.collection("categories").get();
+        const existingSlugs = new Set();
 
-        if(snapshot.empty){
+        existing.forEach(function(doc){ existingSlugs.add(doc.id); });
+
+        const missing = DEFAULT_CATEGORIES.filter(function(cat){
+            return !existingSlugs.has(cat.slug);
+        });
+
+        if(missing.length > 0){
 
             const batch = db.batch();
 
-            DEFAULT_CATEGORIES.forEach(function(cat){
+            missing.forEach(function(cat){
                 const ref = db.collection("categories").doc(cat.slug);
                 batch.set(ref, {nameAr:cat.nameAr, mainType:cat.mainType});
             });
