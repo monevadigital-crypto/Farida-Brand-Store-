@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة تحكم Farida Brand Store</title>
+
+<style>
+
+:root{
+    --black:#080808;
+    --black-2:#10100f;
+    --ivory:#f5f0e7;
+    --cream:#ded6c9;
+    --gold:#c9a766;
+    --gold-light:#e4cb92;
+    --gray:#99938b;
+    --gray-dark:#65615b;
+    --line:rgba(255,255,255,.10);
+    --green:#20a566;
+    --red:#d9534f;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Tajawal","Segoe UI",sans-serif;}
+
+body{
+    background:var(--black);
+    color:var(--ivory);
+    min-height:100vh;
+}
+
+/* ===== LOGIN ===== */
+
+#loginScreen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.login-box{
+    background:var(--black-2);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:32px 24px;
+    width:100%;
+    max-width:360px;
+    text-align:center;
+}
+
+.login-box h1{
+    color:var(--gold-light);
+    font-size:20px;
+    margin-bottom:6px;
+}
+
+.login-box p{
+    color:var(--gray);
+    font-size:12px;
+    margin-bottom:24px;
+}
+
+.field{
+    text-align:right;
+    margin-bottom:14px;
+}
+
+.field label{
+    display:block;
+    font-size:11px;
+    color:var(--gray);
+    margin-bottom:6px;
+}
+
+.field input,
+.field select,
+.field textarea{
+    width:100%;
+    background:var(--black);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:11px 12px;
+    color:var(--ivory);
+    font-size:14px;
+    outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+    border-color:var(--gold);
+}
+
+.btn{
+    display:inline-block;
+    width:100%;
+    background:var(--gold);
+    color:#100e08;
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:6px;
+}
+
+.btn:hover{background:var(--gold-light);}
+
+.btn.secondary{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--ivory);
+}
+
+.btn.danger{
+    background:var(--red);
+    color:#fff;
+}
+
+.btn.small{
+    width:auto;
+    padding:7px 12px;
+    font-size:12px;
+    margin:0;
+}
+
+#loginError{
+    color:var(--red);
+    font-size:12px;
+    margin-top:10px;
+    display:none;
+}
+
+/* ===== ADMIN APP ===== */
+
+#adminApp{display:none;}
+
+header.admin-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 20px;
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    background:var(--black);
+    z-index:10;
+}
+
+header.admin-header h1{
+    font-size:16px;
+    color:var(--gold-light);
+}
+
+header.admin-header span{
+    display:block;
+    font-size:11px;
+    color:var(--gray);
+    margin-top:2px;
+}
+
+main{
+    padding:16px;
+    max-width:1000px;
+    margin:0 auto;
+    padding-bottom:80px;
+}
+
+/* ===== TABS ===== */
+
+.tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:18px;
+    background:var(--black-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:4px;
+}
+
+.tab-btn{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--gray);
+    padding:10px;
+    border-radius:9px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.tab-btn.active{
+    background:var(--gold);
+    color:#100e08;
+}
+
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.stats{
+    font-size:12px;
+    color:var(--gray);
+}
+
+.product-row{
+    display:flex;
+    gap:12px;
+    background:var(--black-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    margin-bottom:10px;
+    align-items:center;
+}
+
+.product-row img{
+    width:64px;
+    height:64px;
+    object-fit:cover;
+    border-radius:10px;
+    background:#1a1a18;
+    flex-shrink:0;
+}
+
+.product-row .info{
+    flex:1;
+    min-width:0;
+}
+
+.product-row .info h3{
+    font-size:14px;
+    color:var(--ivory);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.product-row .info p{
+    font-size:11px;
+    color:var(--gray);
+    margin-top:3px;
+}
+
+.badges{
+    display:flex;
+    gap:5px;
+    margin-top:5px;
+    flex-wrap:wrap;
+}
+
+.badge{
+    font-size:9px;
+    padding:2px 7px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    color:var(--gray);
+}
+
+.badge.on{
+    color:var(--gold);
+    border-color:var(--gold);
+}
+
+.badge.off-stock{
+    color:var(--red);
+    border-color:var(--red);
+}
+
+.row-actions{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    flex-shrink:0;
+}
+
+#emptyState,#loadingState,#catEmptyState{
+    text-align:center;
+    color:var(--gray);
+    font-size:12px;
+    padding:60px 0;
+}
+
+/* ===== CATEGORIES TAB ===== */
+
+.cat-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--black-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    margin-bottom:8px;
+}
+
+.cat-row .cat-info h4{
+    font-size:13px;
+    color:var(--ivory);
+}
+
+.cat-row .cat-info span{
+    font-size:10px;
+    color:var(--gray);
+}
+
+.add-cat-box{
+    background:var(--black-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:18px;
+}
+
+.add-cat-box h3{
+    font-size:13px;
+    color:var(--gold-light);
+    margin-bottom:12px;
+}
+
+/* ===== MODAL FORM ===== */
+
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    z-index:100;
+    align-items:flex-end;
+    justify-content:center;
+}
+
+.overlay.open{display:flex;}
+
+.form-sheet{
+    background:var(--black-2);
+    border-radius:20px 20px 0 0;
+    width:100%;
+    max-width:520px;
+    max-height:92vh;
+    overflow-y:auto;
+    padding:20px;
+}
+
+.form-sheet h2{
+    color:var(--gold-light);
+    font-size:16px;
+    margin-bottom:16px;
+}
+
+.form-section-title{
+    font-size:11px;
+    font-weight:700;
+    color:var(--gold);
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    margin:20px 0 10px;
+    padding-bottom:6px;
+    border-bottom:1px solid var(--line);
+}
+
+.form-section-title:first-of-type{
+    margin-top:4px;
+}
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.checks{
+    display:flex;
+    gap:14px;
+    margin:12px 0;
+    flex-wrap:wrap;
+}
+
+.checks label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    color:var(--cream);
+}
+
+/* ===== CHIP SELECTORS (sizes / colors) ===== */
+
+.chip-group{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:6px;
+}
+
+.chip{
+    padding:8px 14px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:var(--black);
+    color:var(--cream);
+    font-size:12px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    user-select:none;
+}
+
+.chip.selected{
+    border-color:var(--gold);
+    background:rgba(201,167,102,.15);
+    color:var(--gold-light);
+}
+
+.chip .swatch-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.25);
+    flex-shrink:0;
+}
+
+/* ===== IMAGES ===== */
+
+.image-preview{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+}
+
+.image-preview .img-wrap{
+    position:relative;
+    width:70px;
+    height:70px;
+}
+
+.image-preview img{
+    width:70px;
+    height:70px;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid var(--line);
+}
+
+.image-preview .img-wrap.cover img{
+    border-color:var(--gold);
+}
+
+.image-preview .cover-tag{
+    position:absolute;
+    bottom:2px;
+    right:2px;
+    background:var(--gold);
+    color:#100e08;
+    font-size:8px;
+    font-weight:700;
+    padding:1px 5px;
+    border-radius:6px;
+}
+
+.image-preview .remove-img{
+    position:absolute;
+    top:-6px;
+    left:-6px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--red);
+    color:#fff;
+    border:none;
+    font-size:12px;
+    line-height:1;
+    cursor:pointer;
+}
+
+.upload-status{
+    font-size:11px;
+    color:var(--gold);
+    margin-bottom:8px;
+    display:none;
+}
+
+.form-actions{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+}
+
+.toast{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--gold);
+    color:#100e08;
+    padding:10px 18px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:700;
+    z-index:200;
+    display:none;
+    max-width:90%;
+    text-align:center;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+
+<div id="loginScreen">
+
+<div class="login-box">
+
+<h1>لوحة تحكم Farida Brand Store</h1>
+<p>سجل دخولك عشان تدير المنتجات والأقسام</p>
+
+<div class="field">
+<label>البريد الإلكتروني</label>
+<input type="email" id="loginEmail" placeholder="admin@example.com">
+</div>
+
+<div class="field">
+<label>كلمة المرور</label>
+<input type="password" id="loginPassword" placeholder="••••••••">
+</div>
+
+<button class="btn" onclick="doLogin()">دخول</button>
+
+<div id="loginError">بيانات الدخول غلط، حاول تاني</div>
+
+</div>
+</div>
+
+<!-- ============ ADMIN APP ============ -->
+
+<div id="adminApp">
+
+<header class="admin-header">
+<div>
+<h1>لوحة التحكم</h1>
+<span id="loggedInAs"></span>
+</div>
+<button class="btn secondary small" onclick="doLogout()">تسجيل خروج</button>
+</header>
+
+<main>
+
+<div class="tabs">
+<button class="tab-btn active" id="tabBtnProducts" onclick="switchTab('products')">المنتجات</button>
+<button class="tab-btn" id="tabBtnCategories" onclick="switchTab('categories')">الأقسام</button>
+</div>
+
+<!-- ===== PRODUCTS TAB ===== -->
+
+<div class="tab-panel active" id="tabProducts">
+
+<div class="toolbar">
+<div class="stats" id="statsText">جاري التحميل...</div>
+<button class="btn small" onclick="openForm()">+ إضافة منتج</button>
+</div>
+
+<div id="loadingState">جاري تحميل المنتجات...</div>
+<div id="emptyState" style="display:none;">لا توجد منتجات بعد، ابدأ بإضافة منتج جديد</div>
+<div id="productsList"></div>
+
+</div>
+
+<!-- ===== CATEGORIES TAB ===== -->
+
+<div class="tab-panel" id="tabCategories">
+
+<div class="add-cat-box">
+<h3>إضافة قسم جديد</h3>
+
+<div class="two-col">
+<div class="field">
+<label>اسم القسم</label>
+<input type="text" id="newCatName" placeholder="مثال: عبايات">
+</div>
+<div class="field">
+<label>يظهر تحت</label>
+<select id="newCatMain">
+<option value="women">حريمي</option>
+<option value="kids">أطفال</option>
+</select>
+</div>
+</div>
+
+<button class="btn small" onclick="addCategory()">إضافة القسم</button>
+
+</div>
+
+<div class="stats" style="margin-bottom:10px;" id="catStatsText">جاري التحميل...</div>
+<div id="catEmptyState" style="display:none;">لا توجد أقسام بعد</div>
+<div id="categoriesList"></div>
+
+</div>
+
+</main>
+</div>
+
+<!-- ============ PRODUCT FORM MODAL ============ -->
+
+<div class="overlay" id="formOverlay">
+<div class="form-sheet">
+
+<h2 id="formTitle">إضافة منتج جديد</h2>
+
+<input type="hidden" id="editingDocId">
+<input type="hidden" id="editingId">
+
+<div class="form-section-title">صور المنتج</div>
+
+<div class="field">
+<label>الصورة الأولى هي اللي هتظهر كغلاف المنتج، وتقدر ترفع أكتر من صورة</label>
+<div class="image-preview" id="imagePreview"></div>
+<input type="file" id="imageInput" accept="image/*" multiple onchange="uploadImages()">
+<div class="upload-status" id="uploadStatus">جاري رفع الصور...</div>
+</div>
+
+<div class="form-section-title">بيانات المنتج</div>
+
+<div class="field">
+<label>اسم المنتج</label>
+<input type="text" id="fNameAr" placeholder="جينز بقصة مريحة">
+</div>
+
+<div class="field">
+<label>وصف قصير</label>
+<input type="text" id="fDescAr" placeholder="تصميم عملي وأنيق للإطلالة اليومية">
+</div>
+
+<div class="two-col">
+<div class="field">
+<label>السعر الحالي (جنيه)</label>
+<input type="number" id="fPrice" placeholder="550" oninput="updateDiscountPreview()">
+</div>
+<div class="field">
+<label>نسبة الخصم % (اختياري)</label>
+<input type="number" id="fDiscountPercent" placeholder="0" min="0" max="90" oninput="updateDiscountPreview()">
+</div>
+</div>
+
+<div class="field" id="discountPreview" style="display:none;">
+<label>السعر قبل الخصم هيبقى: <b id="discountOldPriceText"></b> جنيه</label>
+</div>
+
+<div class="form-section-title">التصنيف</div>
+
+<div class="two-col">
+<div class="field">
+<label>القسم الرئيسي</label>
+<select id="fCategoryMain" onchange="fillSubCategoryOptions()">
+<option value="women">حريمي</option>
+<option value="kids">أطفال</option>
+</select>
+</div>
+<div class="field">
+<label>القسم الفرعي</label>
+<select id="fSubCategory"></select>
+</div>
+</div>
+
+<div class="form-section-title">المقاسات المتاحة</div>
+<div class="chip-group" id="sizesChips"></div>
+
+<div class="form-section-title">الألوان المتاحة</div>
+<div class="chip-group" id="colorsChips"></div>
+
+<div class="form-section-title">ظهور المنتج</div>
+
+<div class="checks">
+<label><input type="checkbox" id="fSale"> ضمن الخصومات</label>
+<label><input type="checkbox" id="fBest"> الأكثر طلبًا</label>
+<label><input type="checkbox" id="fNew"> وصل حديثًا</label>
+<label><input type="checkbox" id="fAvailable" checked> متوفر (ظاهر في الموقع)</label>
+</div>
+
+<div class="form-actions">
+<button class="btn secondary" onclick="closeForm()">إلغاء</button>
+<button class="btn" onclick="saveProduct()">حفظ المنتج</button>
+</div>
+
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+
+const auth = firebase.auth();
+let allProducts = [];
+let allCategories = [];
+let currentImages = [];
+let selectedSizes = [];
+let selectedColors = [];
+
+const FIXED_SIZES = ["XS","S","M","L","XL","XXL","3XL","Free Size"];
+
+const FIXED_COLORS = [
+    {name:"أسود", hex:"#111111"},
+    {name:"أبيض", hex:"#f5f5f5"},
+    {name:"أحمر", hex:"#c0392b"},
+    {name:"أزرق", hex:"#2980b9"},
+    {name:"كحلي", hex:"#1b2a4a"},
+    {name:"أخضر", hex:"#27ae60"},
+    {name:"بيج", hex:"#d9c7a3"},
+    {name:"بني", hex:"#7b4a2f"},
+    {name:"رمادي", hex:"#8a8a8a"},
+    {name:"وردي", hex:"#e6a4b4"},
+    {name:"أصفر", hex:"#e2c93b"},
+    {name:"ذهبي", hex:"#c9a766"},
+    {name:"برتقالي", hex:"#e07b39"},
+    {name:"بنفسجي", hex:"#8e5fb0"}
+];
+
+const DEFAULT_CATEGORIES = [
+    {slug:"tshirts", nameAr:"تي شيرت", mainType:"women"},
+    {slug:"jackets", nameAr:"جواكت", mainType:"women"},
+    {slug:"sweatshirts", nameAr:"سويت شيرت", mainType:"women"},
+    {slug:"shirts", nameAr:"قمصان وبلوزات", mainType:"women"},
+    {slug:"sweaters", nameAr:"بلوفر", mainType:"women"},
+    {slug:"cardigans", nameAr:"كارديجان", mainType:"women"},
+    {slug:"sets", nameAr:"سوتس و فستان", mainType:"women"},
+    {slug:"pants", nameAr:"بنطلونات", mainType:"women"},
+    {slug:"skirts", nameAr:"الجيب", mainType:"women"},
+    {slug:"kids-clothes", nameAr:"ملابس أطفال", mainType:"kids"}
+];
+
+/* ===== AUTH ===== */
+
+auth.onAuthStateChanged(function(user){
+
+    if(user){
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("adminApp").style.display = "block";
+        document.getElementById("loggedInAs").textContent = user.email;
+        initAdmin();
+    }else{
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("adminApp").style.display = "none";
+    }
+
+});
+
+function doLogin(){
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const errorBox = document.getElementById("loginError");
+
+    errorBox.style.display = "none";
+
+    auth.signInWithEmailAndPassword(email, password)
+        .catch(function(err){
+            errorBox.textContent = "بيانات الدخول غلط: " + err.message;
+            errorBox.style.display = "block";
+        });
+
+}
+
+function doLogout(){
+    auth.signOut();
+}
+
+async function initAdmin(){
+    await ensureDefaultCategories();
+    await loadCategories();
+    await loadProducts();
+    buildChipSelectors();
+}
+
+/* ===== TABS ===== */
+
+function switchTab(tab){
+
+    document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
+    document.getElementById("tabBtnCategories").classList.toggle("active", tab === "categories");
+    document.getElementById("tabProducts").classList.toggle("active", tab === "products");
+    document.getElementById("tabCategories").classList.toggle("active", tab === "categories");
+
+}
+
+/* ===== CATEGORIES ===== */
+
+async function ensureDefaultCategories(){
+
+    try{
+
+        const existing = await db.collection("categories").get();
+        const existingSlugs = new Set();
+
+        existing.forEach(function(doc){ existingSlugs.add(doc.id); });
+
+        const missing = DEFAULT_CATEGORIES.filter(function(cat){
+            return !existingSlugs.has(cat.slug);
+        });
+
+        if(missing.length > 0){
+
+            const batch = db.batch();
+
+            missing.forEach(function(cat){
+                const ref = db.collection("categories").doc(cat.slug);
+                batch.set(ref, {nameAr:cat.nameAr, mainType:cat.mainType});
+            });
+
+            await batch.commit();
+
+        }
+
+    }catch(err){
+        console.error("Seeding categories failed:", err);
+    }
+
+}
+
+async function loadCategories(){
+
+    try{
+
+        const snapshot = await db.collection("categories").get();
+
+        allCategories = [];
+
+        snapshot.forEach(function(doc){
+            allCategories.push({slug:doc.id, ...doc.data()});
+        });
+
+        renderCategoriesList();
+        fillSubCategoryOptions();
+
+    }catch(err){
+        console.error(err);
+        showToast("حصل خطأ في تحميل الأقسام");
+    }
+
+}
+
+function renderCategoriesList(){
+
+    const list = document.getElementById("categoriesList");
+    const empty = document.getElementById("catEmptyState");
+
+    document.getElementById("catStatsText").textContent = "عدد الأقسام: " + allCategories.length;
+
+    if(allCategories.length === 0){
+        empty.style.display = "block";
+        list.innerHTML = "";
+        return;
+    }
+
+    empty.style.display = "none";
+
+    list.innerHTML = allCategories.map(function(c){
+        return `
+        <div class="cat-row">
+            <div class="cat-info">
+                <h4>${escapeHtml(c.nameAr)}</h4>
+                <span>${c.mainType === "kids" ? "أطفال" : "حريمي"}</span>
+            </div>
+            <button class="btn small danger" onclick="deleteCategory('${c.slug}','${escapeHtml(c.nameAr)}')">حذف</button>
+        </div>`;
+    }).join("");
+
+}
+
+async function addCategory(){
+
+    const name = document.getElementById("newCatName").value.trim();
+    const mainType = document.getElementById("newCatMain").value;
+
+    if(!name){
+        alert("اكتب اسم القسم");
+        return;
+    }
+
+    const slug = "cat-" + Date.now();
+
+    try{
+        await db.collection("categories").doc(slug).set({nameAr:name, mainType:mainType});
+        document.getElementById("newCatName").value = "";
+        showToast("تمت إضافة القسم ✓");
+        await loadCategories();
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء إضافة القسم");
+    }
+
+}
+
+async function deleteCategory(slug, name){
+
+    const inUse = allProducts.some(function(p){ return p.subCategory === slug; });
+
+    if(inUse){
+        alert("لا يمكن حذف \"" + name + "\" لأنه مستخدم في منتجات حالية. غيّر قسم هذه المنتجات أولاً.");
+        return;
+    }
+
+    if(!confirm("متأكد إنك عايز تحذف قسم \"" + name + "\"؟")) return;
+
+    try{
+        await db.collection("categories").doc(slug).delete();
+        showToast("تم حذف القسم");
+        await loadCategories();
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحذف");
+    }
+
+}
+
+function fillSubCategoryOptions(){
+
+    const mainType = document.getElementById("fCategoryMain").value;
+    const select = document.getElementById("fSubCategory");
+
+    const filtered = allCategories.filter(function(c){ return c.mainType === mainType; });
+
+    select.innerHTML = filtered.map(function(c){
+        return `<option value="${c.slug}">${escapeHtml(c.nameAr)}</option>`;
+    }).join("");
+
+    if(filtered.length === 0){
+        select.innerHTML = `<option value="">أضف قسم من تبويب "الأقسام" أولاً</option>`;
+    }
+
+}
+
+/* ===== CHIP SELECTORS ===== */
+
+function buildChipSelectors(){
+
+    const sizesBox = document.getElementById("sizesChips");
+
+    sizesBox.innerHTML = FIXED_SIZES.map(function(size){
+        return `<div class="chip" data-size="${size}" onclick="toggleSizeChip('${size}', this)">${size}</div>`;
+    }).join("");
+
+    const colorsBox = document.getElementById("colorsChips");
+
+    colorsBox.innerHTML = FIXED_COLORS.map(function(c){
+        return `<div class="chip" data-color="${c.name}" onclick="toggleColorChip('${c.name}', this)"><span class="swatch-dot" style="background:${c.hex}"></span>${c.name}</div>`;
+    }).join("");
+
+}
+
+function toggleSizeChip(size, el){
+
+    const idx = selectedSizes.indexOf(size);
+
+    if(idx === -1){
+        selectedSizes.push(size);
+        el.classList.add("selected");
+    }else{
+        selectedSizes.splice(idx, 1);
+        el.classList.remove("selected");
+    }
+
+}
+
+function toggleColorChip(color, el){
+
+    const idx = selectedColors.indexOf(color);
+
+    if(idx === -1){
+        selectedColors.push(color);
+        el.classList.add("selected");
+    }else{
+        selectedColors.splice(idx, 1);
+        el.classList.remove("selected");
+    }
+
+}
+
+function setSelectedChips(sizes, colors){
+
+    selectedSizes = (sizes || []).slice();
+    selectedColors = (colors || []).slice();
+
+    document.querySelectorAll("#sizesChips .chip").forEach(function(el){
+        el.classList.toggle("selected", selectedSizes.indexOf(el.dataset.size) !== -1);
+    });
+
+    document.querySelectorAll("#colorsChips .chip").forEach(function(el){
+        el.classList.toggle("selected", selectedColors.indexOf(el.dataset.color) !== -1);
+    });
+
+}
+
+/* ===== DISCOUNT PREVIEW ===== */
+
+function updateDiscountPreview(){
+
+    const price = Number(document.getElementById("fPrice").value);
+    const percent = Number(document.getElementById("fDiscountPercent").value);
+
+    const previewBox = document.getElementById("discountPreview");
+
+    if(price && percent > 0 && percent < 100){
+        const oldPrice = Math.round(price / (1 - percent / 100));
+        document.getElementById("discountOldPriceText").textContent = oldPrice;
+        previewBox.style.display = "block";
+    }else{
+        previewBox.style.display = "none";
+    }
+
+}
+
+/* ===== LOAD PRODUCTS ===== */
+
+async function loadProducts(){
+
+    document.getElementById("loadingState").style.display = "block";
+    document.getElementById("productsList").innerHTML = "";
+    document.getElementById("emptyState").style.display = "none";
+
+    try{
+
+        const snapshot = await db.collection("products").orderBy("id","asc").get();
+
+        allProducts = [];
+
+        snapshot.forEach(function(doc){
+            allProducts.push({ docId: doc.id, ...doc.data() });
+        });
+
+        renderList();
+
+    }catch(err){
+        console.error(err);
+        showToast("حصل خطأ في تحميل المنتجات");
+    }finally{
+        document.getElementById("loadingState").style.display = "none";
+    }
+
+}
+
+function renderList(){
+
+    const list = document.getElementById("productsList");
+    const empty = document.getElementById("emptyState");
+
+    document.getElementById("statsText").textContent =
+        "عدد المنتجات: " + allProducts.length;
+
+    if(allProducts.length === 0){
+        empty.style.display = "block";
+        list.innerHTML = "";
+        return;
+    }
+
+    empty.style.display = "none";
+
+    list.innerHTML = allProducts.map(function(p){
+
+        const cover = (p.images && p.images.length) ? p.images[0] : p.image;
+
+        return `
+        <div class="product-row">
+            <img src="${cover || ''}" onerror="this.style.opacity=0.2">
+            <div class="info">
+                <h3>${escapeHtml(p.nameAr)}</h3>
+                <p>${p.price} جنيه ${p.oldPrice ? '<s>' + p.oldPrice + '</s>' : ''}</p>
+                <div class="badges">
+                    <span class="badge ${p.available ? 'on' : 'off-stock'}">${p.available ? 'متوفر' : 'مخفي'}</span>
+                    ${p.sale ? '<span class="badge on">خصم</span>' : ''}
+                    ${p.best ? '<span class="badge on">الأكثر طلبًا</span>' : ''}
+                    ${p.new ? '<span class="badge on">جديد</span>' : ''}
+                </div>
+            </div>
+            <div class="row-actions">
+                <button class="btn small secondary" onclick="editProduct('${p.docId}')">تعديل</button>
+                <button class="btn small danger" onclick="deleteProduct('${p.docId}','${escapeHtml(p.nameAr)}')">حذف</button>
+            </div>
+        </div>`;
+
+    }).join("");
+
+}
+
+function escapeHtml(str){
+    return String(str == null ? "" : str)
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+/* ===== FORM ===== */
+
+function openForm(){
+
+    document.getElementById("formTitle").textContent = "إضافة منتج جديد";
+    document.getElementById("editingDocId").value = "";
+    document.getElementById("editingId").value = "";
+    document.getElementById("fNameAr").value = "";
+    document.getElementById("fDescAr").value = "";
+    document.getElementById("fPrice").value = "";
+    document.getElementById("fDiscountPercent").value = "";
+    document.getElementById("discountPreview").style.display = "none";
+    document.getElementById("fCategoryMain").value = "women";
+    fillSubCategoryOptions();
+    document.getElementById("fSale").checked = false;
+    document.getElementById("fBest").checked = false;
+    document.getElementById("fNew").checked = false;
+    document.getElementById("fAvailable").checked = true;
+    currentImages = [];
+    renderImagePreview();
+    setSelectedChips([], []);
+
+    document.getElementById("formOverlay").classList.add("open");
+
+}
+
+function editProduct(docId){
+
+    const p = allProducts.find(function(x){ return x.docId === docId; });
+    if(!p) return;
+
+    document.getElementById("formTitle").textContent = "تعديل منتج";
+    document.getElementById("editingDocId").value = p.docId;
+    document.getElementById("editingId").value = p.id;
+    document.getElementById("fNameAr").value = p.nameAr || "";
+    document.getElementById("fDescAr").value = p.descriptionAr || "";
+    document.getElementById("fPrice").value = p.price || "";
+
+    let discountPercent = "";
+    if(p.oldPrice && p.price && p.oldPrice > p.price){
+        discountPercent = Math.round(100 - (p.price / p.oldPrice) * 100);
+    }
+    document.getElementById("fDiscountPercent").value = discountPercent;
+    updateDiscountPreview();
+
+    document.getElementById("fCategoryMain").value = p.categoryMain || "women";
+    fillSubCategoryOptions();
+    document.getElementById("fSubCategory").value = p.subCategory || "";
+
+    document.getElementById("fSale").checked = !!p.sale;
+    document.getElementById("fBest").checked = !!p.best;
+    document.getElementById("fNew").checked = !!p.new;
+    document.getElementById("fAvailable").checked = p.available !== false;
+
+    currentImages = (p.images && p.images.length) ? p.images.slice() : (p.image ? [p.image] : []);
+    renderImagePreview();
+
+    setSelectedChips(p.sizes || [], p.colorsAr || []);
+
+    document.getElementById("formOverlay").classList.add("open");
+
+}
+
+function closeForm(){
+    document.getElementById("formOverlay").classList.remove("open");
+}
+
+/* ===== IMAGES (MULTIPLE, CLOUDINARY) ===== */
+
+function renderImagePreview(){
+
+    const box = document.getElementById("imagePreview");
+
+    box.innerHTML = currentImages.map(function(url, index){
+        return `
+        <div class="img-wrap ${index === 0 ? 'cover' : ''}">
+            <img src="${url}">
+            ${index === 0 ? '<span class="cover-tag">غلاف</span>' : ''}
+            <button class="remove-img" onclick="removeImage(${index})">×</button>
+        </div>`;
+    }).join("");
+
+}
+
+function removeImage(index){
+    currentImages.splice(index, 1);
+    renderImagePreview();
+}
+
+async function uploadImages(){
+
+    const input = document.getElementById("imageInput");
+    const files = Array.from(input.files || []);
+    if(files.length === 0) return;
+
+    const status = document.getElementById("uploadStatus");
+    status.style.display = "block";
+    status.textContent = "جاري رفع الصور... (0/" + files.length + ")";
+
+    let done = 0;
+
+    for(const file of files){
+
+        try{
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+            const res = await fetch(
+                "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload",
+                { method:"POST", body:formData }
+            );
+
+            const data = await res.json();
+
+            if(!data.secure_url){
+                throw new Error(data.error ? data.error.message : "فشل الرفع");
+            }
+
+            currentImages.push(data.secure_url);
+            done++;
+            status.textContent = "جاري رفع الصور... (" + done + "/" + files.length + ")";
+            renderImagePreview();
+
+        }catch(err){
+            console.error(err);
+            alert("فشل رفع إحدى الصور، تأكد من إعدادات Cloudinary في ملف firebase-config.js");
+        }
+
+    }
+
+    status.style.display = "none";
+    input.value = "";
+    showToast("تم رفع الصور ✓");
+
+}
+
+/* ===== SAVE / DELETE ===== */
+
+async function getNextId(){
+
+    if(allProducts.length === 0) return 1;
+
+    const maxId = allProducts.reduce(function(max,p){
+        return Math.max(max, Number(p.id) || 0);
+    },0);
+
+    return maxId + 1;
+
+}
+
+async function saveProduct(){
+
+    const nameAr = document.getElementById("fNameAr").value.trim();
+    const price = Number(document.getElementById("fPrice").value);
+
+    if(!nameAr || !price){
+        alert("من فضلك اكتب اسم المنتج والسعر على الأقل");
+        return;
+    }
+
+    if(currentImages.length === 0){
+        if(!confirm("مفيش صور للمنتج، عايز تكمل من غيرها؟")) return;
+    }
+
+    const docId = document.getElementById("editingDocId").value;
+    const discountPercent = Number(document.getElementById("fDiscountPercent").value) || 0;
+
+    let oldPrice = null;
+    if(discountPercent > 0 && discountPercent < 100){
+        oldPrice = Math.round(price / (1 - discountPercent / 100));
+    }
+
+    const productObj = {
+        nameAr: nameAr,
+        descriptionAr: document.getElementById("fDescAr").value.trim(),
+        price: price,
+        oldPrice: oldPrice,
+        categoryMain: document.getElementById("fCategoryMain").value,
+        subCategory: document.getElementById("fSubCategory").value,
+        sizes: selectedSizes.slice(),
+        colorsAr: selectedColors.slice(),
+        images: currentImages.slice(),
+        image: currentImages[0] || "",
+        sale: document.getElementById("fSale").checked,
+        best: document.getElementById("fBest").checked,
+        new: document.getElementById("fNew").checked,
+        available: document.getElementById("fAvailable").checked,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try{
+
+        if(docId){
+
+            await db.collection("products").doc(docId).update(productObj);
+
+        }else{
+
+            productObj.id = await getNextId();
+            productObj.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+
+            await db.collection("products").add(productObj);
+
+        }
+
+        closeForm();
+        showToast("تم الحفظ بنجاح ✓");
+        loadProducts();
+
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحفظ: " + err.message);
+    }
+
+}
+
+async function deleteProduct(docId, name){
+
+    if(!confirm("متأكد إنك عايز تحذف \"" + name + "\"؟")) return;
+
+    try{
+        await db.collection("products").doc(docId).delete();
+        showToast("تم الحذف");
+        loadProducts();
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحذف");
+    }
+
+}
+
+function showToast(msg){
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(function(){ toast.style.display = "none"; }, 2200);
+}
+
+</script>
+</body>
+</html>
