@@ -172,7 +172,8 @@ main{
 
 .tabs{
     display:flex;
-    gap:8px;
+    flex-wrap:wrap;
+    gap:6px;
     margin-bottom:18px;
     background:var(--black-2);
     border:1px solid var(--line);
@@ -182,12 +183,13 @@ main{
 
 .tab-btn{
     flex:1;
+    min-width:75px;
     background:transparent;
     border:none;
     color:var(--gray);
-    padding:10px;
+    padding:9px 4px;
     border-radius:9px;
-    font-size:13px;
+    font-size:11px;
     font-weight:700;
     cursor:pointer;
 }
@@ -563,6 +565,8 @@ main{
 <div class="tabs">
 <button class="tab-btn active" id="tabBtnProducts" onclick="switchTab('products')">المنتجات</button>
 <button class="tab-btn" id="tabBtnCategories" onclick="switchTab('categories')">الأقسام</button>
+<button class="tab-btn" id="tabBtnSettings" onclick="switchTab('settings')">الإعدادات</button>
+<button class="tab-btn" id="tabBtnAccount" onclick="switchTab('account')">الحساب</button>
 </div>
 
 <!-- ===== PRODUCTS TAB ===== -->
@@ -608,6 +612,122 @@ main{
 <div class="stats" style="margin-bottom:10px;" id="catStatsText">جاري التحميل...</div>
 <div id="catEmptyState" style="display:none;">لا توجد أقسام بعد</div>
 <div id="categoriesList"></div>
+
+</div>
+
+<!-- ===== SETTINGS TAB ===== -->
+
+<div class="tab-panel" id="tabSettings">
+
+<div class="add-cat-box">
+<h3>الصفحة الرئيسية</h3>
+
+<div class="field">
+<label>صورة الهيرو (أعلى الموقع)</label>
+<div class="image-preview" id="heroImagePreview"></div>
+<input type="file" id="heroImageInput" accept="image/*" onchange="uploadHeroImage()">
+<div class="upload-status" id="heroUploadStatus">جاري رفع الصورة...</div>
+</div>
+
+<div class="field">
+<label>العنوان الرئيسي</label>
+<input type="text" id="stHeroTitle" placeholder="أسلوبك يبدأ هنا">
+</div>
+
+<div class="field">
+<label>الوصف تحت العنوان</label>
+<input type="text" id="stHeroDesc" placeholder="اختاري قطعك المفضلة من مجموعة Farida Brand Store">
+</div>
+
+<button class="btn small" onclick="saveHeroSettings()">حفظ الصفحة الرئيسية</button>
+
+</div>
+
+<div class="add-cat-box">
+<h3>رقم الواتساب العائم</h3>
+
+<div class="field">
+<label>الرقم بالكود الدولي (بدون + أو مسافات)، مثال: 201027236777</label>
+<input type="text" id="stWhatsapp" placeholder="201027236777">
+</div>
+
+<button class="btn small" onclick="saveWhatsappSettings()">حفظ رقم الواتساب</button>
+
+</div>
+
+<div class="add-cat-box">
+<h3>روابط السوشيال ميديا</h3>
+
+<div class="two-col">
+<div class="field">
+<label>المنصة</label>
+<select id="stSocialPlatform">
+<option value="instagram">Instagram</option>
+<option value="facebook">Facebook</option>
+<option value="tiktok">TikTok</option>
+<option value="twitter">X (تويتر)</option>
+<option value="snapchat">Snapchat</option>
+<option value="youtube">YouTube</option>
+<option value="other">رابط آخر</option>
+</select>
+</div>
+<div class="field">
+<label>الرابط</label>
+<input type="text" id="stSocialUrl" placeholder="https://instagram.com/...">
+</div>
+</div>
+
+<button class="btn small" onclick="addSocialLink()">إضافة الرابط</button>
+
+</div>
+
+<div class="stats" style="margin-bottom:10px;">الروابط المضافة</div>
+<div id="socialLinksEmpty" style="display:none;" class="stats">لا توجد روابط مضافة بعد</div>
+<div id="socialLinksList"></div>
+
+</div>
+
+<!-- ===== ACCOUNT TAB ===== -->
+
+<div class="tab-panel" id="tabAccount">
+
+<div class="add-cat-box">
+<h3>تغيير كلمة المرور</h3>
+
+<div class="field">
+<label>كلمة المرور الحالية</label>
+<input type="password" id="accCurrentPassword" placeholder="••••••••">
+</div>
+
+<div class="field">
+<label>كلمة المرور الجديدة</label>
+<input type="password" id="accNewPassword" placeholder="••••••••">
+</div>
+
+<div class="field">
+<label>تأكيد كلمة المرور الجديدة</label>
+<input type="password" id="accConfirmPassword" placeholder="••••••••">
+</div>
+
+<button class="btn small" onclick="changePassword()">تغيير كلمة المرور</button>
+
+</div>
+
+<div class="add-cat-box">
+<h3>نسيت كلمة المرور؟</h3>
+<p style="font-size:12px;color:var(--gray);margin-bottom:12px;">
+هيتبعتلك رابط إعادة تعيين كلمة المرور على إيميلك المسجل به الدخول.
+</p>
+<button class="btn small secondary" onclick="sendResetEmail()">إرسال رابط إعادة التعيين</button>
+</div>
+
+<div class="add-cat-box">
+<h3>الخروج من الحساب</h3>
+<p style="font-size:12px;color:var(--gray);margin-bottom:12px;">
+هيتم تسجيل خروجك من لوحة التحكم في هذا الجهاز.
+</p>
+<button class="btn small danger" onclick="doLogout()">تسجيل خروج</button>
+</div>
 
 </div>
 
@@ -797,8 +917,17 @@ function switchTab(tab){
 
     document.getElementById("tabBtnProducts").classList.toggle("active", tab === "products");
     document.getElementById("tabBtnCategories").classList.toggle("active", tab === "categories");
+    document.getElementById("tabBtnSettings").classList.toggle("active", tab === "settings");
+    document.getElementById("tabBtnAccount").classList.toggle("active", tab === "account");
+
     document.getElementById("tabProducts").classList.toggle("active", tab === "products");
     document.getElementById("tabCategories").classList.toggle("active", tab === "categories");
+    document.getElementById("tabSettings").classList.toggle("active", tab === "settings");
+    document.getElementById("tabAccount").classList.toggle("active", tab === "account");
+
+    if(tab === "settings"){
+        loadStoreSettings();
+    }
 
 }
 
@@ -1345,6 +1474,276 @@ function showToast(msg){
     toast.textContent = msg;
     toast.style.display = "block";
     setTimeout(function(){ toast.style.display = "none"; }, 2200);
+}
+
+/* ===== STORE SETTINGS ===== */
+
+let currentHeroImage = "";
+let currentSocialLinks = [];
+
+async function loadStoreSettings(){
+
+    try{
+
+        const doc = await db.collection("settings").doc("store").get();
+
+        const data = doc.exists ? doc.data() : {};
+
+        document.getElementById("stHeroTitle").value = data.heroTitle || "";
+        document.getElementById("stHeroDesc").value = data.heroDescription || "";
+        document.getElementById("stWhatsapp").value = data.whatsappNumber || "";
+
+        currentHeroImage = data.heroImage || "";
+        renderHeroImagePreview();
+
+        currentSocialLinks = data.socialLinks || [];
+        renderSocialLinksList();
+
+    }catch(err){
+        console.error(err);
+        showToast("حصل خطأ في تحميل الإعدادات");
+    }
+
+}
+
+function renderHeroImagePreview(){
+
+    const box = document.getElementById("heroImagePreview");
+
+    box.innerHTML = currentHeroImage
+        ? `<div class="img-wrap cover"><img src="${currentHeroImage}"><span class="cover-tag">الحالية</span></div>`
+        : "";
+
+}
+
+async function uploadHeroImage(){
+
+    const input = document.getElementById("heroImageInput");
+    const file = input.files[0];
+    if(!file) return;
+
+    const status = document.getElementById("heroUploadStatus");
+    status.style.display = "block";
+
+    try{
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        const res = await fetch(
+            "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload",
+            { method:"POST", body:formData }
+        );
+
+        const data = await res.json();
+
+        if(!data.secure_url){
+            throw new Error(data.error ? data.error.message : "فشل الرفع");
+        }
+
+        currentHeroImage = data.secure_url;
+        renderHeroImagePreview();
+        showToast("تم رفع الصورة ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("فشل رفع الصورة، تأكد من إعدادات Cloudinary");
+    }finally{
+        status.style.display = "none";
+        input.value = "";
+    }
+
+}
+
+async function saveHeroSettings(){
+
+    try{
+
+        await db.collection("settings").doc("store").set({
+            heroImage: currentHeroImage,
+            heroTitle: document.getElementById("stHeroTitle").value.trim(),
+            heroDescription: document.getElementById("stHeroDesc").value.trim()
+        }, { merge:true });
+
+        showToast("تم حفظ الصفحة الرئيسية ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحفظ");
+    }
+
+}
+
+async function saveWhatsappSettings(){
+
+    const number = document.getElementById("stWhatsapp").value.trim();
+
+    if(!number){
+        alert("اكتب رقم الواتساب أولاً");
+        return;
+    }
+
+    try{
+
+        await db.collection("settings").doc("store").set({
+            whatsappNumber: number
+        }, { merge:true });
+
+        showToast("تم حفظ رقم الواتساب ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحفظ");
+    }
+
+}
+
+function renderSocialLinksList(){
+
+    const list = document.getElementById("socialLinksList");
+    const empty = document.getElementById("socialLinksEmpty");
+
+    if(currentSocialLinks.length === 0){
+        empty.style.display = "block";
+        list.innerHTML = "";
+        return;
+    }
+
+    empty.style.display = "none";
+
+    list.innerHTML = currentSocialLinks.map(function(link, index){
+        return `
+        <div class="cat-row">
+            <div class="cat-info">
+                <h4>${escapeHtml(link.platform)}</h4>
+                <span>${escapeHtml(link.url)}</span>
+            </div>
+            <button class="btn small danger" onclick="removeSocialLink(${index})">حذف</button>
+        </div>`;
+    }).join("");
+
+}
+
+async function addSocialLink(){
+
+    const platform = document.getElementById("stSocialPlatform").value;
+    const url = document.getElementById("stSocialUrl").value.trim();
+
+    if(!url){
+        alert("اكتب رابط الصفحة أولاً");
+        return;
+    }
+
+    currentSocialLinks.push({ platform:platform, url:url });
+
+    try{
+
+        await db.collection("settings").doc("store").set({
+            socialLinks: currentSocialLinks
+        }, { merge:true });
+
+        document.getElementById("stSocialUrl").value = "";
+        renderSocialLinksList();
+        showToast("تمت إضافة الرابط ✓");
+
+    }catch(err){
+        console.error(err);
+        currentSocialLinks.pop();
+        alert("حصل خطأ أثناء الحفظ");
+    }
+
+}
+
+async function removeSocialLink(index){
+
+    const removed = currentSocialLinks.splice(index, 1);
+
+    try{
+
+        await db.collection("settings").doc("store").set({
+            socialLinks: currentSocialLinks
+        }, { merge:true });
+
+        renderSocialLinksList();
+        showToast("تم حذف الرابط");
+
+    }catch(err){
+        console.error(err);
+        currentSocialLinks.splice(index, 0, removed[0]);
+        alert("حصل خطأ أثناء الحذف");
+    }
+
+}
+
+/* ===== ACCOUNT ===== */
+
+async function changePassword(){
+
+    const currentPassword = document.getElementById("accCurrentPassword").value;
+    const newPassword = document.getElementById("accNewPassword").value;
+    const confirmPassword = document.getElementById("accConfirmPassword").value;
+
+    if(!currentPassword || !newPassword){
+        alert("املأ كل الحقول");
+        return;
+    }
+
+    if(newPassword.length < 6){
+        alert("كلمة المرور الجديدة لازم تكون 6 حروف/أرقام على الأقل");
+        return;
+    }
+
+    if(newPassword !== confirmPassword){
+        alert("كلمة المرور الجديدة وتأكيدها مش متطابقين");
+        return;
+    }
+
+    const user = auth.currentUser;
+
+    try{
+
+        const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+        await user.reauthenticateWithCredential(credential);
+        await user.updatePassword(newPassword);
+
+        document.getElementById("accCurrentPassword").value = "";
+        document.getElementById("accNewPassword").value = "";
+        document.getElementById("accConfirmPassword").value = "";
+
+        showToast("تم تغيير كلمة المرور بنجاح ✓");
+
+    }catch(err){
+        console.error(err);
+
+        if(err.code === "auth/wrong-password" || err.code === "auth/invalid-credential"){
+            alert("كلمة المرور الحالية غلط");
+        }else{
+            alert("حصل خطأ: " + err.message);
+        }
+
+    }
+
+}
+
+function sendResetEmail(){
+
+    const user = auth.currentUser;
+
+    if(!user || !user.email){
+        alert("مفيش إيميل مسجل لهذا الحساب");
+        return;
+    }
+
+    auth.sendPasswordResetEmail(user.email)
+        .then(function(){
+            showToast("تم إرسال رابط إعادة التعيين إلى " + user.email);
+        })
+        .catch(function(err){
+            console.error(err);
+            alert("حصل خطأ: " + err.message);
+        });
+
 }
 
 </script>
