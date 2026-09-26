@@ -644,6 +644,54 @@ main{
 </div>
 
 <div class="add-cat-box">
+<h3>قسم البانر الترويجي</h3>
+
+<div class="field">
+<label>صورة البانر</label>
+<div class="image-preview" id="bannerImagePreview"></div>
+<input type="file" id="bannerImageInput" accept="image/*" onchange="uploadBannerImage()">
+<div class="upload-status" id="bannerUploadStatus">جاري رفع الصورة...</div>
+</div>
+
+<div class="field">
+<label>العنوان</label>
+<input type="text" id="stBannerTitle" placeholder="تفاصيل تستحق أن تُرى">
+</div>
+
+<div class="field">
+<label>الوصف</label>
+<input type="text" id="stBannerText" placeholder="اختاري القطعة التي تشبه أسلوبك">
+</div>
+
+<button class="btn small" onclick="saveBannerSettings()">حفظ قسم البانر</button>
+
+</div>
+
+<div class="add-cat-box">
+<h3>قسم "عن المتجر"</h3>
+
+<div class="field">
+<label>الصورة</label>
+<div class="image-preview" id="aboutImagePreview"></div>
+<input type="file" id="aboutImageInput" accept="image/*" onchange="uploadAboutImage()">
+<div class="upload-status" id="aboutUploadStatus">جاري رفع الصورة...</div>
+</div>
+
+<div class="field">
+<label>العنوان</label>
+<input type="text" id="stAboutTitle" placeholder="أقل. لكن أرقى.">
+</div>
+
+<div class="field">
+<label>الوصف</label>
+<textarea id="stAboutText" rows="4" placeholder="في Farida Brand Store نؤمن أن الأناقة تبدأ من التفاصيل البسيطة..."></textarea>
+</div>
+
+<button class="btn small" onclick="saveAboutSettings()">حفظ قسم "عن المتجر"</button>
+
+</div>
+
+<div class="add-cat-box">
 <h3>رقم الواتساب العائم</h3>
 
 <div class="field">
@@ -1479,6 +1527,8 @@ function showToast(msg){
 /* ===== STORE SETTINGS ===== */
 
 let currentHeroImage = "";
+let currentBannerImage = "";
+let currentAboutImage = "";
 let currentSocialLinks = [];
 
 async function loadStoreSettings(){
@@ -1492,9 +1542,19 @@ async function loadStoreSettings(){
         document.getElementById("stHeroTitle").value = data.heroTitle || "";
         document.getElementById("stHeroDesc").value = data.heroDescription || "";
         document.getElementById("stWhatsapp").value = data.whatsappNumber || "";
+        document.getElementById("stBannerTitle").value = data.bannerTitle || "";
+        document.getElementById("stBannerText").value = data.bannerText || "";
+        document.getElementById("stAboutTitle").value = data.aboutTitle || "";
+        document.getElementById("stAboutText").value = data.aboutText || "";
 
         currentHeroImage = data.heroImage || "";
         renderHeroImagePreview();
+
+        currentBannerImage = data.bannerImage || "";
+        renderBannerImagePreview();
+
+        currentAboutImage = data.aboutImage || "";
+        renderAboutImagePreview();
 
         currentSocialLinks = data.socialLinks || [];
         renderSocialLinksList();
@@ -1511,9 +1571,14 @@ function renderHeroImagePreview(){
     const box = document.getElementById("heroImagePreview");
 
     box.innerHTML = currentHeroImage
-        ? `<div class="img-wrap cover"><img src="${currentHeroImage}"><span class="cover-tag">الحالية</span></div>`
+        ? `<div class="img-wrap cover"><img src="${currentHeroImage}"><span class="cover-tag">الحالية</span><button class="remove-img" onclick="clearHeroImage()">×</button></div>`
         : "";
 
+}
+
+function clearHeroImage(){
+    currentHeroImage = "";
+    renderHeroImagePreview();
 }
 
 async function uploadHeroImage(){
@@ -1567,6 +1632,158 @@ async function saveHeroSettings(){
         }, { merge:true });
 
         showToast("تم حفظ الصفحة الرئيسية ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحفظ");
+    }
+
+}
+
+/* --- Banner section --- */
+
+function renderBannerImagePreview(){
+
+    const box = document.getElementById("bannerImagePreview");
+
+    box.innerHTML = currentBannerImage
+        ? `<div class="img-wrap cover"><img src="${currentBannerImage}"><span class="cover-tag">الحالية</span><button class="remove-img" onclick="clearBannerImage()">×</button></div>`
+        : "";
+
+}
+
+function clearBannerImage(){
+    currentBannerImage = "";
+    renderBannerImagePreview();
+}
+
+async function uploadBannerImage(){
+
+    const input = document.getElementById("bannerImageInput");
+    const file = input.files[0];
+    if(!file) return;
+
+    const status = document.getElementById("bannerUploadStatus");
+    status.style.display = "block";
+
+    try{
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        const res = await fetch(
+            "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload",
+            { method:"POST", body:formData }
+        );
+
+        const data = await res.json();
+
+        if(!data.secure_url){
+            throw new Error(data.error ? data.error.message : "فشل الرفع");
+        }
+
+        currentBannerImage = data.secure_url;
+        renderBannerImagePreview();
+        showToast("تم رفع الصورة ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("فشل رفع الصورة، تأكد من إعدادات Cloudinary");
+    }finally{
+        status.style.display = "none";
+        input.value = "";
+    }
+
+}
+
+async function saveBannerSettings(){
+
+    try{
+
+        await db.collection("settings").doc("store").set({
+            bannerImage: currentBannerImage,
+            bannerTitle: document.getElementById("stBannerTitle").value.trim(),
+            bannerText: document.getElementById("stBannerText").value.trim()
+        }, { merge:true });
+
+        showToast("تم حفظ قسم البانر ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("حصل خطأ أثناء الحفظ");
+    }
+
+}
+
+/* --- About section --- */
+
+function renderAboutImagePreview(){
+
+    const box = document.getElementById("aboutImagePreview");
+
+    box.innerHTML = currentAboutImage
+        ? `<div class="img-wrap cover"><img src="${currentAboutImage}"><span class="cover-tag">الحالية</span><button class="remove-img" onclick="clearAboutImage()">×</button></div>`
+        : "";
+
+}
+
+function clearAboutImage(){
+    currentAboutImage = "";
+    renderAboutImagePreview();
+}
+
+async function uploadAboutImage(){
+
+    const input = document.getElementById("aboutImageInput");
+    const file = input.files[0];
+    if(!file) return;
+
+    const status = document.getElementById("aboutUploadStatus");
+    status.style.display = "block";
+
+    try{
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        const res = await fetch(
+            "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload",
+            { method:"POST", body:formData }
+        );
+
+        const data = await res.json();
+
+        if(!data.secure_url){
+            throw new Error(data.error ? data.error.message : "فشل الرفع");
+        }
+
+        currentAboutImage = data.secure_url;
+        renderAboutImagePreview();
+        showToast("تم رفع الصورة ✓");
+
+    }catch(err){
+        console.error(err);
+        alert("فشل رفع الصورة، تأكد من إعدادات Cloudinary");
+    }finally{
+        status.style.display = "none";
+        input.value = "";
+    }
+
+}
+
+async function saveAboutSettings(){
+
+    try{
+
+        await db.collection("settings").doc("store").set({
+            aboutImage: currentAboutImage,
+            aboutTitle: document.getElementById("stAboutTitle").value.trim(),
+            aboutText: document.getElementById("stAboutText").value.trim()
+        }, { merge:true });
+
+        showToast('تم حفظ قسم "عن المتجر" ✓');
 
     }catch(err){
         console.error(err);
